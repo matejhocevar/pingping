@@ -5,7 +5,6 @@ const { Location, validate } = require('../models/location');
 
 router.get('/', async function(req, res) {
 	try {
-		console.log(req.headers);
 		let ip = (req.headers != null ? req.headers['x-forwarded-for'] : null) ||
 			req.connection.remoteAddress ||
 			req.socket.remoteAddress ||
