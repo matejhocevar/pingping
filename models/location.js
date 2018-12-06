@@ -2,11 +2,18 @@ const mongoose = require('mongoose');
 const Joi = require('joi');
 
 const locationSchema= new mongoose.Schema({
-	name: {
+	ip: {
 		type: String,
 		required: true,
-		minlength: 5,
-		maxlength: 50
+		minlength: 3,
+		maxlength: 15,
+		match: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+	},
+	location: {
+		type: String,
+		required: true,
+		minlength: 1,
+		maxlength: 255
 	}
 });
 
@@ -14,7 +21,8 @@ const Location = mongoose.model('location', locationSchema);
 
 function validateLocation(genre) {
 	const schema = {
-		name: Joi.string().min(5).max(50).required()
+		ip: Joi.string().min(3).max(15).required(),
+		location: Joi.string().min(1).max(255).required(),
 	};
 
 	return Joi.validate(genre, schema);
