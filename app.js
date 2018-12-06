@@ -7,7 +7,6 @@ const app = express();
 
 require('./logging')();
 require('./db')();
-require('./config')();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
