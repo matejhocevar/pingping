@@ -1,16 +1,18 @@
 const createError = require('http-errors');
 const express = require('express');
-const logger = require('morgan');
 
-const indexRouter = require('./routes/index');
+const status = require('./routes/status');
 
 const app = express();
 
-app.use(logger('dev'));
+require('./logging')();
+require('./db')();
+require('./config')();
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/', indexRouter);
+app.use('/', status);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
