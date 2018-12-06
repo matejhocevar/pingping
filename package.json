@@ -14,7 +14,6 @@
     "lodash": "^4.17.11",
     "mongoose": "^5.3.15",
     "request": "^2.88.0",
-    "winston": "^2.4.0",
-    "winston-mongodb": "^3.0.0"
+    "winston": "^2.4.0"
   }
 }
