@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const request = require('../request');
+const _ = require('lodash');
 
+const auth = require('../middleware/auth');
 const { Location, validate } = require('../models/location');
 
-router.get('/', async function(req, res) {
+router.get('/', auth, async function(req, res) {
 	try {
 		let ip = (req.headers != null ? req.headers['x-forwarded-for'] : null) ||
 			req.connection.remoteAddress ||
@@ -17,19 +20,27 @@ router.get('/', async function(req, res) {
 		let object = await Location.findOne({ ip: ip });
 
 		if (!object) {
-			const location = 'Ljubljana';   // Fetch location
-			const { error } = validate({ ip: ip, location });
+			let response = await request({
+				uri: `https://get.geojs.io/v1/ip/geo.json?ip=${ip}`,
+				json: true
+			});
+
+			const location = response[0]['country'];
+			const { error } = validate({ ip: ip, location: location });
 			if (error) return res.status(400).send(error.details[0].message);
 
 			object = new Location({ ip: ip, location: location });
 			object = await object.save();
 			readFromDB = false;
 		}
-		// res.send(object);
-		res.send({ object: object, 'read_from_db': readFromDB });
+
+		res.send({
+			object: _.pick(object, ['ip', 'location']),
+			'read_from_db': readFromDB
+		});
 	}
 	catch (ex) {
-		res.status(400);
+		return res.status(400);
 	}
 });
 
