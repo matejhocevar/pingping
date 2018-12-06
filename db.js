@@ -3,6 +3,6 @@ require('winston-mongodb');
 const mongoose = require('mongoose');
 
 module.exports = function() {
-	mongoose.connect('mongodb://localhost/pingping')
+	mongoose.connect(process.env.DB_URL)
 		.then(() => winston.info('Connected to MongoDB'));
 };
